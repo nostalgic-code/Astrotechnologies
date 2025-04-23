@@ -11,10 +11,15 @@ export default function BlogList() {
 
   useEffect(() => {
     async function fetchPosts() {
+      const apiUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://127.0.0.1:8000/api/posts/"
+          : "/choreo-apis/astrotechonologies/backend/v1/api/posts/";
+  
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/posts/"); // 👈 make sure this matches your Django backend
+        const res = await fetch(apiUrl);
         if (!res.ok) {
-          const errorText = await res.text(); // In case response is HTML
+          const errorText = await res.text();
           throw new Error(`Failed to load: ${res.status}\n${errorText}`);
         }
         const data = await res.json();
@@ -27,6 +32,7 @@ export default function BlogList() {
     }
     fetchPosts();
   }, []);
+  
 
   if (loading)
     return <div className="text-center py-10 text-lg font-medium">Loading blog posts…</div>;
